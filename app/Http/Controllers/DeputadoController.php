@@ -73,6 +73,7 @@ class DeputadoController extends Controller
     public function topDeputados(){
 
     	$res = Verba::select('idDeputado',DB::raw('SUM(valor) as total'))
+    			->whereraw('year(dataReferencia) = 2017')
 	            ->groupby('idDeputado')
 	            ->orderby('total','desc')
 	            ->paginate(5);
