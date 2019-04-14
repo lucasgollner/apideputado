@@ -16,13 +16,39 @@ class DeputadoController extends Controller
     //
 
     public function getDeputadosWS(){
-    	//////////////////////////////////////////////////////////////////// BLOCO INTEGRANDO API VIA GUZZLE  BUSCA DEPUTADOS /////////////////////////////////////////////////
-    	$client = new Client();
-    	$res = $client->get('http://dadosabertos.almg.gov.br/ws/deputados/em_exercicio?formato=json');
+    	//////////////////////////////////////////////////////////////////// BLOCO INTEGRANDO API VIA GUZZLE  /////////////////////////////////////////////////
+    	// $client = new Client();
+    	// $res = $client->get('http://dadosabertos.almg.gov.br/ws/deputados/em_exercicio?formato=json');
 
-    	$deputados = json_decode($res->getBody());
+    	// $deputados = json_decode($res->getBody());
     	
-    	return $deputados;
+    	// return $deputados;
+
+    	//////////////////////////////////////////////////////////////////// BLOCO INTEGRANDO API VIA CURL //////////////////////////////////////////////////////
+    	$curl = curl_init();
+
+		curl_setopt_array($curl, array(
+		  CURLOPT_URL => "http://dadosabertos.almg.gov.br/ws/deputados/em_exercicio?formato=json",
+		  CURLOPT_RETURNTRANSFER => true,
+		  CURLOPT_ENCODING => "",
+		  CURLOPT_MAXREDIRS => 100,
+		  CURLOPT_TIMEOUT => 600,
+		  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+		  CURLOPT_CUSTOMREQUEST => "GET",
+		  CURLOPT_POSTFIELDS => "",
+		));
+
+		$response = curl_exec($curl);
+		$json = json_decode($response, true);
+		$err = curl_error($curl);
+
+		curl_close($curl);
+
+		if ($err) {	
+		  return \Response::json(['Resultado' => 'Falha na conexão ao buscar lista telefonica dos DEPUTADOS'], 408);
+		} else {
+		  return $json;
+		}
     }
 
     
@@ -36,15 +62,15 @@ class DeputadoController extends Controller
 
     	$deps = $this->getDeputadosWS();
 
-    	$totalDeps = sizeof($deps->list);
+    	$totalDeps = sizeof($deps['list']);
 
     	// VERIFICA SE DEPUTADO JÁ ESTÁ NA BASE, CASO POSITIVO ATUALIZA INFORMAÇÕES, SENÃO REGISTRA O DEPUTADO
-    	foreach($deps->list as $dep){
-    		if($deputado = Deputado::where('numero', $dep->id)->first()){
-		    	$deputado->numero 			= $dep->id;
-		    	$deputado->nome 			= $dep->nome;
-		    	$deputado->partido 			= $dep->partido;
-		    	$deputado->tagLocalizacao 	= $dep->tagLocalizacao;
+    	foreach($deps['list'] as $dep){
+    		if($deputado = Deputado::where('numero', $dep['id'])->first()){
+		    	$deputado->numero 			= $dep['id'];
+		    	$deputado->nome 			= $dep['nome'];
+		    	$deputado->partido 			= $dep['partido'];
+		    	$deputado->tagLocalizacao 	= $dep['tagLocalizacao'];
 		    	
 		    	if($deputado->save())
 		    		$atualizou++;
@@ -52,10 +78,10 @@ class DeputadoController extends Controller
 		    		$falhou++;
     		}else{
     			$deputado = new Deputado;
-    			$deputado->numero 			= $dep->id;
-		    	$deputado->nome 			= $dep->nome;
-		    	$deputado->partido 			= $dep->partido;
-		    	$deputado->tagLocalizacao 	= $dep->tagLocalizacao;
+		    	$deputado->numero 			= $dep['id'];
+		    	$deputado->nome 			= $dep['nome'];
+		    	$deputado->partido 			= $dep['partido'];
+		    	$deputado->tagLocalizacao 	= $dep['tagLocalizacao'];
 		    	
 		    	if($deputado->save())
 		    		$gravou++;
@@ -66,7 +92,7 @@ class DeputadoController extends Controller
     	}
 
 
-    	return \Response::json(['Resultado' => 'Gravou: '.$gravou.' | Atualizou: '.$atualizou.' | Falhou: '.$falhou.' | (Total: '.$totalDeps.' )'], 201);
+    	return \Response::json(['Resultado' => ['Gravou' => $gravou, 'Atualizou' => $atualizou, 'Falhou' => $falhou, 'Total' => $totalDeps]], 201);
 
     }
 
