@@ -10,6 +10,7 @@ Projeto desenvolvido em:
 - Laravel 5.8.11
 - PHP 7.3.2
 - Banco de dados MySQL
+- Biblioteca para API guzzlehttp 6.0
 
 ## Implementação do Projeto
 
