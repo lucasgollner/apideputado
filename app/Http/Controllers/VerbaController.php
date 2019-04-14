@@ -71,7 +71,7 @@ class VerbaController extends Controller
 		    				array_push($dataValor, $d);
 		    			}
 
-		    			if( !Verba::where('idDeputado', $deputado->numero)->where('codTipoDespesa', $verba["codTipoDespesa"])->first() ){
+		    			if( !Verba::where('idDeputado', $deputado->numero)->whereraw('year(dataReferencia) = 2017')->where('codTipoDespesa', $verba["codTipoDespesa"])->first() ){
 			    			$nova = new Verba;
 			    			$nova->idDeputado 		= $deputado->numero;
 					    	$nova->dataReferencia 	= $dataValor[1];
