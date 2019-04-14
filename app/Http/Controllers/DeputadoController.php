@@ -45,14 +45,11 @@ class DeputadoController extends Controller
 		curl_close($curl);
 
 		if ($err) {	
-		  return \Response::json(['Resultado' => 'Falha na conexão ao buscar lista telefonica dos DEPUTADOS'], 408);
+		  return \Response::json(['Resultado' => 'Falha na conexão ao buscar lista dos DEPUTADOS'], 408);
 		} else {
 		  return $json;
 		}
     }
-
-    
-
 
     public function gravaDeputadosBD(){
 
