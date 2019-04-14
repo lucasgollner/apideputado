@@ -12,6 +12,8 @@ Projeto desenvolvido em:
 - Banco de dados MySQL
 - Biblioteca para API guzzlehttp 6.0
 
+Na pasta PUBLIC do projeto existe um arquivo SQL com o Backup dos dados já baixados para testes. (bkp_apideputado.sql)
+
 ## Implementação do Projeto
 
 - Salvar o projeto
