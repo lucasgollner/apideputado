@@ -94,12 +94,19 @@ class DeputadoController extends Controller
     }
 
     public function topDeputados(){
+        
+        //$result = Verba::select('idDeputado',DB::raw('SUM(valor) as total, ANY_VALUE(nome) as nome'))
+        //      ->leftjoin('deputados','numero','=','idDeputado')
+    	//		->whereraw('year(dataReferencia) = 2017')
+	    //      ->groupby('idDeputado')
+	    //      ->orderby('total','desc')
+	    //      ->paginate(5);
 
     	$res = Verba::select('idDeputado',DB::raw('SUM(valor) as total'))
-    			->whereraw('year(dataReferencia) = 2017')
-	            ->groupby('idDeputado')
-	            ->orderby('total','desc')
-	            ->paginate(5);
+    	                ->whereraw('year(dataReferencia) = 2017')
+	                    ->groupby('idDeputado')
+	                    ->orderby('total','desc')
+	                    ->paginate(5);
 
 	    $result = [];
 	    foreach($res as $valor){
