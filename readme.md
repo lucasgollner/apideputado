@@ -1,7 +1,7 @@
 ## Projeto API Deputado
 
-Requisitos do projeto:
-Consumir dados da API da Assembléia Legistiva e via API entregar JSON com as informações consumidas.
+Projeto:
+Visa consumir dados da API da Assembléia Legistiva e via API entregar JSON com as informações consumidas.
 
 Foram criados métodos para armazenar os dados localmente dos Deputados, seus contatos de Redes Sociais e dados das Verbas Indenizatórias solicitadas por eles no ano de 2017.
 
